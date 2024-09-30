@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-// Functie om een bestand te kopiëren van bron naar bestemming
+// Functie om een bestand te kopiëren van huidige plek naar bedoelde plek
 func copyFile(srcPath, destPath string) error {
 	srcFile, err := os.Open(srcPath)
 	if err != nil {
@@ -42,13 +42,13 @@ func moveFile(srcPath, destDir string) error {
 
 	destPath := filepath.Join(destDir, filepath.Base(srcPath))
 
-	// Kopieer het bestand naar de doelmap
+	// Kopieer het bestand naar de juiste map
 	err := copyFile(srcPath, destPath)
 	if err != nil {
 		return err
 	}
 
-	// Verwijder het bronbestand nadat het is gekopieerd
+	// Verwijder het orgiginele nadat het is gekopieerd
 	err = os.Remove(srcPath)
 	if err != nil {
 		return fmt.Errorf("fout bij het verwijderen van bronbestand: %v", err)
