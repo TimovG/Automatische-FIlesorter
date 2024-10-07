@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -56,28 +55,6 @@ func getTargetDirectory(config Config, srcDir, fileName string) string {
 	return ""
 }
 
-// Functie om een bestand te kopiëren van huidige plek naar bedoelde plek
-func copyFile(srcPath, destPath string) error {
-	srcFile, err := os.Open(srcPath)
-	if err != nil {
-		return fmt.Errorf("fout bij het openen van bestand: %v", err)
-	}
-	defer srcFile.Close()
-
-	destFile, err := os.Create(destPath)
-	if err != nil {
-		return fmt.Errorf("fout bij het maken van doelbestand: %v", err)
-	}
-	defer destFile.Close()
-
-	_, err = io.Copy(destFile, srcFile)
-	if err != nil {
-		return fmt.Errorf("fout bij het kopiëren van bestand: %v", err)
-	}
-
-	return nil
-}
-
 // Functie om de juiste bestanden te verplaatsen naar de juiste map
 func moveFile(srcPath, destDir string) error {
 	// Zorgt ervoor dat de doelmap bestaat
@@ -90,16 +67,10 @@ func moveFile(srcPath, destDir string) error {
 
 	destPath := filepath.Join(destDir, filepath.Base(srcPath))
 
-	// Kopieer het bestand naar de juiste map
-	err := copyFile(srcPath, destPath)
+	// Verplaats het bestand naar de juiste map
+	err := os.Rename(srcPath, destPath)
 	if err != nil {
-		return err
-	}
-
-	// Verwijder het orgiginele nadat het is gekopieerd
-	err = os.Remove(srcPath)
-	if err != nil {
-		return fmt.Errorf("fout bij het verwijderen van bronbestand: %v", err)
+		return fmt.Errorf("fout bij het verplaatsen van bestand: %v", err)
 	}
 
 	fmt.Printf("Bestand verplaatst naar: %s\n", destPath)
