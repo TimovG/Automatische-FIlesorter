@@ -8,51 +8,29 @@ import (
 	"strings"
 )
 
+type Folder struct {
+	FolderName     string   `json:"folderName"`
+	FileExtensions []string `json:"fileExtensions"`
+}
+
 type Config struct {
-	Afbeeldingen []string `json:"Afbeeldingen"`
-	Videos       []string `json:"Videos"`
-	Documents    []string `json:"Documents"`
+	Folders []Folder `json:"folders"`
 }
 
 func loadConfig(filePath string) (Config, error) {
-	var config Config
-
-	// Open en lees het JSON-bestand
 	configFile, err := os.Open(filePath)
 	if err != nil {
-		return config, fmt.Errorf("Fout bij het openen van JSON-bestand: %v", err)
+		return Config{}, fmt.Errorf("fout bij het openen van json bestand: %v", err)
 	}
 	defer configFile.Close()
 
-	// Decodeer het JSON-bestand naar de Config struct
+	var config Config
 	err = json.NewDecoder(configFile).Decode(&config)
 	if err != nil {
-		return config, fmt.Errorf("Fout bij het decoderen van het JSON-bestand: %v", err)
+		return Config{}, fmt.Errorf("fout bij het decoderen van het JSON-bestand: %v", err)
 	}
 
 	return config, nil
-}
-
-func getTargetDirectory(config Config, srcDir, fileName string) string {
-	ext := strings.ToLower(filepath.Ext(fileName))
-
-	for _, imageExt := range config.Afbeeldingen {
-		if ext == imageExt {
-			return filepath.Join(srcDir, "Afbeeldingen")
-		}
-	}
-	for _, videoExt := range config.Videos {
-		if ext == videoExt {
-			return filepath.Join(srcDir, "Videos")
-		}
-	}
-	for _, docExt := range config.Documents {
-		if ext == docExt {
-			return filepath.Join(srcDir, "Documents")
-		}
-	}
-	// Als geen match, return een lege string
-	return ""
 }
 
 // Functie om de juiste bestanden te verplaatsen naar de juiste map
@@ -87,12 +65,19 @@ func sortFiles(srcDir string, config Config) error {
 	for _, entry := range entries {
 		if !entry.IsDir() {
 			srcPath := filepath.Join(srcDir, entry.Name())
+			ext := strings.ToLower(filepath.Ext(entry.Name()))
 
-			destDir := getTargetDirectory(config, srcDir, entry.Name())
-			if destDir != "" {
-				err := moveFile(srcPath, destDir)
-				if err != nil {
-					return err
+			// Controleer bij alle gedefinieerde mappen
+			for _, folder := range config.Folders {
+				for _, fileExt := range folder.FileExtensions {
+					if ext == fileExt {
+						destDir := filepath.Join(srcDir, folder.FolderName)
+						err := moveFile(srcPath, destDir)
+						if err != nil {
+							return err
+						}
+						break
+					}
 				}
 			}
 		}

@@ -1,5 +1,36 @@
 {
-    "Afbeeldingen": [".jpg", ".jpeg", ".png", ".gif"],
-    "Videos": [".mp4"],
-    "Documents": [".doc", ".pdf", ".ppt", ".xlsx"]
+    "folders": [
+        {
+            "folderName": "Documenten",
+            "fileExtensions": [
+                ".docx",
+                ".pdf",
+                ".txt"
+            ]
+        },
+        {
+            "folderName": "Afbeeldingen",
+            "fileExtensions": [
+                ".jpg",
+                ".png",
+                ".gif"
+            ]
+        },
+        {
+            "folderName": "Videos",
+            "fileExtensions": [
+                ".mp4",
+                ".avi",
+                ".mkv"
+            ]
+        },
+        {
+            "folderName": "Music",
+            "fileExtensions": [
+                ".mp3",
+                ".wav",
+                ".flac"
+            ]
+        }
+    ]
 }
