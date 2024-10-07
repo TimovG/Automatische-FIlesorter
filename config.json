@@ -4,6 +4,7 @@
             "folderName": "Documenten",
             "fileExtensions": [
                 ".docx",
+                ".doc",
                 ".pdf",
                 ".txt"
             ]
@@ -12,6 +13,7 @@
             "folderName": "Afbeeldingen",
             "fileExtensions": [
                 ".jpg",
+                ".jpeg",
                 ".png",
                 ".gif"
             ]
@@ -22,14 +24,6 @@
                 ".mp4",
                 ".avi",
                 ".mkv"
-            ]
-        },
-        {
-            "folderName": "Music",
-            "fileExtensions": [
-                ".mp3",
-                ".wav",
-                ".flac"
             ]
         }
     ]
